@@ -33,7 +33,7 @@ const ESPECIES = {
 const LAGUNAS = {
   apanta: {
     nombre: 'Laguna de Apanta',
-    coords: [-14.563606, -71.568233],   // TU COORDENADA: [latitud, longitud], ej. [-14.123456, -71.123456]
+    coords: [-14.560944, -71.588806],   // TU COORDENADA: [latitud, longitud], ej. [-14.123456, -71.123456]
     zoom: 15,       // acercamiento inicial del mapa (1 lejos ... 19 cerca)
     foto: 'img/Apanta_parado.jpg',
     registros: {
@@ -46,7 +46,7 @@ const LAGUNAS = {
   },
   apacheta: {
     nombre: 'Laguna de Huaylla Apacheta',
-    coords: null,   // TU COORDENADA: [latitud, longitud], ej. [-14.123456, -71.123456]
+    coords: [-14.589917, -71.706167],   // TU COORDENADA: [latitud, longitud], ej. [-14.123456, -71.123456]
     zoom: 15,       // acercamiento inicial del mapa (1 lejos ... 19 cerca)
     foto: 'img/Huayalla_Apacheta_parado.jpg',
     registros: {
@@ -57,7 +57,7 @@ const LAGUNAS = {
   },
   qochapata: {
     nombre: 'Laguna de Qochapata',
-    coords: null,   // TU COORDENADA: [latitud, longitud], ej. [-14.123456, -71.123456]
+    coords: [-14.758972, -71.447306],   // TU COORDENADA: [latitud, longitud], ej. [-14.123456, -71.123456]
     zoom: 15,       // acercamiento inicial del mapa (1 lejos ... 19 cerca)
     foto: 'img/Qochapata_parado.jpg',
     registros: {
@@ -75,22 +75,22 @@ const LAGUNAS = {
 const ETAPAS = [
   { fecha: 'Ago – Set 2015',          titulo: 'Estudio base',
     texto: 'Estudio previo (Huamani et al.): 22 especies registradas en Espinar.',
-    imagen: 'img/linea/01_estudio_base.jpg' },
+    imagen: 'img/fondo_presentacion.jpg' },
   { fecha: 'Jul 2024 – Ene 2025',     titulo: 'Marco normativo',
     texto: 'Ley Nro 3299 y DS 002-2025 MINAM: protección de humedales del Perú.',
-    imagen: 'img/linea/02_marco_normativo.jpg' },
+    imagen: 'img/Ley.jpg' },
   { fecha: 'Jul – Ago 2025',          titulo: 'Etapa 1 · Planificación',
     texto: 'Revisión bibliográfica y diseño del plan de indagación EUREKA.',
-    imagen: 'img/linea/03_planificacion.jpg' },
+    imagen: 'img/Plan_Accion.jpeg' },
   { fecha: 'Agosto 2025',             titulo: 'Etapa 2 · Capacitación',
     texto: 'Taller de identificación y taxonomía con la metodología TICAV.',
-    imagen: 'img/linea/04_capacitacion.jpg' },
+    imagen: 'img/Capacitacion.jpg' },
   { fecha: '8, 15 y 18 Set 2025',     titulo: 'Etapa 3 · Campo, fase 1',
     texto: 'Tres salidas de campo independientes: Qochapata, Apacheta y Apanta.',
-    imagen: 'img/linea/05_campo_fase1.jpg' },
+    imagen: 'img/Campo1.jpg' },
   { fecha: '31 Jul – 2 Ago 2026',     titulo: 'Etapa 3 · Campo, fase 2',
     texto: 'Monitoreo simultáneo en las 3 zonas, con apoyo de UNSAAC y Women Birders.',
-    imagen: 'img/linea/06_campo_fase2.jpg' },
+    imagen: 'img/Apoyo.jpg' },
   { fecha: '1 – 9 Ago 2026',          titulo: 'Etapa 4 · Gabinete',
     texto: 'Análisis Shannon-Wiener (H = 2.61) y redacción del informe final.',
     imagen: 'img/linea/07_gabinete.jpg' }
