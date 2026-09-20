@@ -6,7 +6,12 @@
     <title>Avistamiento de aves en Espinar</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body data-view="lagunas">
+    <nav class="view-switch" aria-label="Cambiar de vista">
+      <button type="button" class="is-active" data-view="lagunas" aria-pressed="true">Lagunas</button>
+      <button type="button" data-view="timeline" aria-pressed="false">Línea de tiempo</button>
+    </nav>
+
     <div class="presentation" id="presentationScreen">
       <div class="overlay"></div>
       <div class="presentation-content">
@@ -19,41 +24,97 @@
     </div>
 
     <main class="gallery" id="gallery">
+      <div class="sky" aria-hidden="true">
+        <svg class="bird bird-1" viewBox="0 0 40 16"><path d="M2 13 Q11 0 20 10 Q29 0 38 13" /></svg>
+        <svg class="bird bird-2" viewBox="0 0 40 16"><path d="M2 13 Q11 0 20 10 Q29 0 38 13" /></svg>
+        <svg class="bird bird-3" viewBox="0 0 40 16"><path d="M2 13 Q11 0 20 10 Q29 0 38 13" /></svg>
+      </div>
+
       <header class="gallery-header">
         <p class="kicker">Avistamiento de aves en las lagunas andinas</p>
-        <h2>Espinar en vuelto</h2>
+        <h2>Espinar en vuelo</h2>
       </header>
 
       <section class="balloons" aria-label="Lagunas y avistamientos de Espinar">
-        <article class="balloon balloon-1">
-          <div class="balloon-image-wrap">
+        <article class="balloon balloon-1" data-laguna="apanta">
+          <span class="balloon-ring"></span>
+            <div class="balloon-image-wrap">
             <img src="img/Apanta_parado.jpg" alt="Aves en la laguna de Apanta" />
           </div>
           <div class="balloon-label">
             <span>Laguna de Apanta</span>
+            <small>16 especies · toca para ver</small>
           </div>
         </article>
 
-        <article class="balloon balloon-2">
-          <div class="balloon-image-wrap">
+        <article class="balloon balloon-2" data-laguna="apacheta">
+          <span class="balloon-ring"></span>
+            <div class="balloon-image-wrap">
             <img src="img/Huayalla_Apacheta_parado.jpg" alt="Aves en Huayalla Apacheta" />
           </div>
           <div class="balloon-label">
             <span>Laguna de Huaylla Apacheta</span>
+            <small>11 especies · toca para ver</small>
           </div>
         </article>
 
-        <article class="balloon balloon-3">
-          <div class="balloon-image-wrap">
+        <article class="balloon balloon-3" data-laguna="qochapata">
+          <span class="balloon-ring"></span>
+            <div class="balloon-image-wrap">
             <img src="img/Qochapata_parado.jpg" alt="Aves en Qochapata" />
           </div>
           <div class="balloon-label">
             <span>Laguna de Qochapata</span>
+            <small>17 especies · toca para ver</small>
           </div>
         </article>
       </section>
     </main>
 
-    <script src="script.js"></script>
+    <section class="timeline-view" id="timelineView" aria-label="Línea de tiempo de la investigación">
+      <div class="sky" aria-hidden="true"></div>
+      <div class="timeline-inner">
+        <header class="gallery-header">
+          <p class="kicker">Línea de tiempo de la investigación</p>
+          <h2>Paso a paso</h2>
+        </header>
+        <ol class="timeline-track" id="timelineTrack"></ol>
+        <div class="timeline-controls">
+          <button type="button" class="tl-btn" id="tlPrev" aria-label="Etapa anterior">&#8249;</button>
+          <p class="timeline-count" id="tlCount" aria-live="polite">1 / 7</p>
+          <button type="button" class="tl-btn" id="tlNext" aria-label="Etapa siguiente">&#8250;</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="species-panel" id="speciesPanel" aria-hidden="true">
+      <div class="species-backdrop" data-close></div>
+      <section class="species-dialog" role="dialog" aria-modal="true" aria-labelledby="speciesTitle">
+        <header class="species-head">
+          <img class="species-head-img" id="speciesHeadImg" alt="" />
+          <div>
+            <h3 id="speciesTitle"></h3>
+            <p id="speciesMeta"></p>
+          </div>
+          <button type="button" class="species-close" data-close aria-label="Cerrar">&times;</button>
+        </header>
+        <div class="species-tabs" role="tablist">
+          <button type="button" role="tab" class="is-active" id="tabBtnEspecies" data-tab="especies" aria-selected="true" aria-controls="paneEspecies">Especies</button>
+          <button type="button" role="tab" id="tabBtnMapa" data-tab="mapa" aria-selected="false" aria-controls="paneMapa">Mapa</button>
+        </div>
+        <div class="species-pane" id="paneEspecies" role="tabpanel" aria-labelledby="tabBtnEspecies">
+          <p class="species-note">Promedio de individuos registrados en 2025 y 2026, de mayor a menor.</p>
+          <div class="species-lists" id="speciesLists"></div>
+        </div>
+        <div class="species-pane species-pane-map" id="paneMapa" role="tabpanel" aria-labelledby="tabBtnMapa" hidden>
+          <div class="species-map" id="speciesMap"></div>
+          <p class="map-msg" id="mapMsg" hidden></p>
+          <p class="map-aviso" id="mapAviso" hidden>Sin conexión: los mapas necesitan internet.</p>
+        </div>
+      </section>
+    </div>
+
+    <script src="datos.js" defer></script>
+    <script src="script.js" defer></script>
   </body>
 </html>

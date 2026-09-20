@@ -25,7 +25,7 @@ html, body {
 
 body {
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .presentation {
@@ -81,11 +81,14 @@ body {
 }
 
 .gallery {
+  position: relative;
+  overflow: hidden;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 4rem 2rem 3rem;
+  padding: 5.5rem 2rem 3rem;
   background: linear-gradient(180deg, rgba(19, 52, 39, 0.56), rgba(15, 63, 47, 0.68)), url("img/fondo.jpg");
   background-size: cover;
   background-position: center;
@@ -101,6 +104,8 @@ body {
 }
 
 .gallery-header {
+  position: relative;
+  z-index: 1;
   text-align: center;
   margin-bottom: 2.5rem;
 }
@@ -123,41 +128,161 @@ body {
   text-shadow: 0 4px 18px rgba(45, 154, 103, 0.35);
 }
 
+/* ---------- Cielo y laguna (capa decorativa detrás de los globos) ---------- */
+.sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* dos olas que se deslizan a distinta velocidad */
+.sky::before,
+.sky::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-repeat: repeat-x;
+  background-size: 1200px 100%;
+}
+
+.sky::before {
+  height: 120px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 60 Q150 0 300 60 T600 60 T900 60 T1200 60 V120 H0Z' fill='%237ec9d1' fill-opacity='.22'/%3E%3C/svg%3E");
+  animation: waves 26s linear infinite reverse;
+}
+
+.sky::after {
+  height: 84px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 60 Q150 0 300 60 T600 60 T900 60 T1200 60 V120 H0Z' fill='%23eaf7ee' fill-opacity='.14'/%3E%3C/svg%3E");
+  animation: waves 15s linear infinite;
+}
+
+/* aves que cruzan el cielo (traslación = vuelo, escala vertical = aleteo) */
+.bird {
+  position: absolute;
+  left: 0;
+  width: 34px;
+  height: 14px;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.78);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation:
+    fly var(--t) linear var(--delay) infinite,
+    flap 0.55s ease-in-out infinite alternate;
+}
+
+.bird-1 { top: 14%; --t: 26s; --delay: -6s; }
+.bird-2 { top: 26%; --t: 34s; --delay: -21s; width: 26px; }
+.bird-3 { top: 8%;  --t: 44s; --delay: -33s; width: 20px; opacity: 0.7; }
+
+/* ---------- Globos ---------- */
 .balloons {
   position: relative;
+  z-index: 1;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   gap: clamp(1.2rem, 4vw, 4rem);
   flex-wrap: wrap;
   min-height: 420px;
+  /* posición del cursor (-1 a 1), la actualiza script.js */
+  --mx: 0;
+  --my: 0;
 }
 
 .balloon {
   position: relative;
-  width: clamp(230px, 28vw, 300px);
-  height: clamp(230px, 28vw, 300px);
+  isolation: isolate;
+  width: clamp(210px, 27vw, 300px);
+  height: clamp(210px, 27vw, 300px);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 2rem;
-  animation: float 5s ease-in-out infinite;
+  cursor: pointer;
+  transition: scale 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.3);
 }
 
-.balloon:nth-child(1) { animation-delay: 0.2s; }
-.balloon:nth-child(2) { animation-delay: 0.8s; }
-.balloon:nth-child(3) { animation-delay: 1.4s; }
+/* color y profundidad de cada globo */
+.balloon-1 { --d: 0.15s; --c1: #ffd861; --c2: #ff9f43; --depth: 8; }
+.balloon-2 { --d: 0.35s; --c1: #4ad7d0; --c2: #1ca7b8; --depth: 12; }
+.balloon-3 { --d: 0.55s; --c1: #ff8a75; --c2: #f25a5a; --depth: 9; }
 
+/* entrada: los globos suben desde el agua, luego flotan */
+.gallery.visible .balloon {
+  animation:
+    balloon-in 1.1s cubic-bezier(0.2, 0.9, 0.3, 1.15) var(--d) both,
+    float 5s ease-in-out calc(var(--d) + 1.1s) infinite both;
+}
+
+/* halo de luz del color del globo */
+.balloon::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--c1) 0%, transparent 68%);
+  opacity: 0.38;
+  transition: opacity 0.45s ease;
+  animation: halo 4s ease-in-out infinite alternate;
+}
+
+/* cordel que se balancea */
+.balloon::after {
+  content: "";
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  z-index: -1;
+  width: 2px;
+  height: 64px;
+  margin-left: -1px;
+  background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+  transform-origin: top center;
+  animation: sway 3.2s ease-in-out infinite alternate;
+}
+
+/* aro de color que gira (solo transform: se anima en la GPU) */
+.balloon-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 22px 38px rgba(3, 20, 15, 0.35);
+}
+
+.balloon-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(var(--c1), var(--c2), var(--c1));
+  animation: spin 7s linear infinite;
+}
+
+/* foto dentro del aro */
 .balloon-image-wrap {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 9px;
   border-radius: 50%;
   overflow: hidden;
-  border: 12px solid rgba(18, 61, 41, 0.95);
-  box-shadow: 0 22px 38px rgba(3, 20, 15, 0.35);
   background: #d7e5ea;
-  position: relative;
-  transform: scale(1.02);
+}
+
+/* brillo de globo */
+.balloon-image-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.45), transparent 30%);
+  pointer-events: none;
 }
 
 .balloon-image-wrap img {
@@ -165,41 +290,46 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
-  transform: scale(1.03);
-}
-
-.balloon-1 .balloon-image-wrap {
-  background: linear-gradient(135deg, #ffd861 0%, #ff9f43 100%);
-}
-
-.balloon-2 .balloon-image-wrap {
-  background: linear-gradient(135deg, #4ad7d0 0%, #1ca7b8 100%);
-}
-
-.balloon-3 .balloon-image-wrap {
-  background: linear-gradient(135deg, #ff8a75 0%, #f25a5a 100%);
+  scale: 1.1;
+  /* la foto se desplaza con el cursor, como mirar por una ventana */
+  translate: calc(var(--mx) * var(--depth) * 1px) calc(var(--my) * var(--depth) * 1px);
+  transition: scale 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), translate 0.25s ease-out;
 }
 
 .balloon-label {
   position: absolute;
-  bottom: -8px;
+  bottom: -10px;
   left: 50%;
-  transform: translateX(-50%);
-  background: rgba(11, 48, 36, 0.9);
+  translate: -50% 0;
+  width: max-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  background-color: rgba(11, 48, 36, 0.92);
   color: #f5fff7;
-  padding: 0.8rem 1.1rem;
-  border-radius: 999px;
+  padding: 0.7rem 1.5rem;
+  border-radius: 1.6rem;
   text-align: center;
   font-weight: 800;
   letter-spacing: 0.03em;
   box-shadow: 0 10px 22px rgba(3, 20, 15, 0.22);
-  max-width: 92%;
+  max-width: 118%;
+  text-wrap: balance;
   border: 2px solid rgba(255, 255, 255, 0.18);
+  transition: background-color 0.35s ease, color 0.35s ease, translate 0.35s ease, border-color 0.35s ease;
 }
 
 .balloon-label span {
   display: inline-block;
-  font-size: 0.8rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+}
+
+.balloon-label small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
 }
 
 @keyframes fadeOut {
@@ -233,17 +363,952 @@ body {
   }
 }
 
+@keyframes balloon-in {
+  0% {
+    opacity: 0;
+    translate: 0 140px;
+  }
+  100% {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes halo {
+  from {
+    scale: 0.94;
+  }
+  to {
+    scale: 1.06;
+  }
+}
+
+@keyframes sway {
+  from {
+    transform: rotate(-6deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes waves {
+  to {
+    background-position-x: 1200px;
+  }
+}
+
+@keyframes fly {
+  from {
+    translate: -8vw 0;
+  }
+  to {
+    translate: 108vw -8vh;
+  }
+}
+
+@keyframes flap {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0.45);
+  }
+}
+
 @media (max-width: 720px) {
   .gallery {
-    padding-top: 3rem;
+    padding-top: 5rem;
   }
 
   .balloons {
-    gap: 2.2rem;
+    gap: 4.5rem;
   }
 
   .balloon {
-    width: min(70vw, 260px);
-    height: 300px;
+    width: min(72vw, 280px);
+    height: min(72vw, 280px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .balloon,
+  .balloon::before,
+  .balloon::after,
+  .balloon-ring::before,
+  .bird,
+  .sky::before,
+  .sky::after {
+    animation: none !important;
+  }
+}
+
+/* ---------- Foco visible (teclado) ---------- */
+.balloon:focus-visible .balloon-image-wrap {
+  outline: 3px solid #fff;
+  outline-offset: 5px;
+}
+
+.view-switch button:focus-visible,
+.tl-btn:focus-visible,
+.species-close:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+/* ---------- Selector de vista (arriba) ---------- */
+.view-switch {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(8, 30, 22, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 10px 26px rgba(3, 20, 15, 0.3);
+}
+
+/* la pastilla amarilla se desliza hacia la vista activa */
+.view-switch::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 999px;
+  background: var(--accent);
+  transition: translate 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+}
+
+body[data-view="timeline"] .view-switch::before {
+  translate: 100% 0;
+}
+
+.view-switch button {
+  position: relative;
+  min-width: 9.5rem;
+  padding: 0.6rem 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: #f5fff7;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.view-switch button.is-active {
+  color: #10251d;
+}
+
+/* ---------- Panel de especies ---------- */
+.species-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.species-panel.open {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.species-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 18, 14, 0.82);
+}
+
+.species-dialog {
+  position: relative;
+  width: min(980px, 100%);
+  height: min(90vh, 780px);
+  height: min(90dvh, 780px);
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #eaf7ee;
+  background: linear-gradient(160deg, rgba(14, 52, 39, 0.97), rgba(9, 33, 26, 0.97));
+  border: 2px solid var(--c1);
+  border-radius: 1.6rem;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 60px -12px var(--c1);
+  translate: 0 24px;
+  scale: 0.97;
+  transition: translate 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1), scale 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+}
+
+.species-panel.open .species-dialog {
+  translate: 0 0;
+  scale: 1;
+}
+
+.species-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--c1) 24%, transparent), transparent 70%);
+}
+
+.species-head-img {
+  width: 68px;
+  height: 68px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--c1);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.species-head h3 {
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.species-head p {
+  margin-top: 0.2rem;
+  opacity: 0.8;
+}
+
+.species-close {
+  margin-left: auto;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.species-close:hover {
+  background: var(--c1);
+  color: #10251d;
+}
+
+.species-note {
+  padding: 0.75rem 1.4rem 0.4rem;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+.species-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr));
+  gap: 0.6rem 0.9rem;
+  padding: 0.4rem 1.2rem 1.3rem;
+}
+
+.sp {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 84px;
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.55rem 0.8rem 0.55rem 0.55rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sp-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.sp-img.is-broken {
+  visibility: hidden;
+}
+
+.sp-names em {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.sp-names span {
+  display: block;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.sp-bar {
+  height: 8px;
+  margin: 0.4rem 0 0.25rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.sp-bar span {
+  display: block;
+  height: 100%;
+  width: var(--w);
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--c2), var(--c1));
+  transform-origin: left;
+}
+
+/* las barras crecen al abrir el panel */
+.species-list.anim .sp-bar span {
+  animation: grow 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i) * 45ms + 0.15s);
+}
+
+.sp-years {
+  font-size: 0.78rem;
+  opacity: 0.7;
+}
+
+.sp-avg {
+  text-align: right;
+}
+
+.sp-avg strong {
+  display: block;
+  font-size: 1.7rem;
+  line-height: 1;
+  color: var(--c1);
+}
+
+.sp-avg small {
+  font-size: 0.72rem;
+  opacity: 0.7;
+}
+
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ---------- Línea de tiempo ---------- */
+.timeline-view {
+  --stepw: min(320px, 78vw);
+  --gap: 1.4rem;
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 5.5rem 0 2rem;
+  background: linear-gradient(180deg, rgba(19, 52, 39, 0.56), rgba(15, 63, 47, 0.68)), url("img/fondo.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+body[data-view="timeline"] .timeline-view {
+  display: flex;
+}
+
+body[data-view="timeline"] .gallery {
+  display: none;
+}
+
+.timeline-inner {
+  position: relative;
+  z-index: 1;
+  margin-block: auto;
+}
+
+.timeline-view .gallery-header {
+  margin-bottom: 1.6rem;
+}
+
+.timeline-track {
+  list-style: none;
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 2rem;
+  padding: 0.2rem calc(100vw - var(--stepw) - 2rem) 1.2rem 2rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+}
+
+.step {
+  position: relative;
+  flex: 0 0 var(--stepw);
+  padding-top: 2.2rem;
+  scroll-snap-align: start;
+}
+
+/* línea que une las etapas y punto de cada una */
+.step::before {
+  content: "";
+  position: absolute;
+  top: 0.6rem;
+  left: 0;
+  width: calc(100% + var(--gap));
+  height: 3px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.step:last-child::before {
+  width: 100%;
+}
+
+.step::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid #123d29;
+  box-shadow: 0 0 0 4px rgba(249, 200, 93, 0.28);
+}
+
+.step-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #f4faf5;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 1.2rem;
+  box-shadow: 0 16px 30px rgba(3, 20, 15, 0.25);
+}
+
+.step-media {
+  position: relative;
+  height: 170px;
+  flex: none;
+  background: linear-gradient(135deg, #4ad7d0, #1ca7b8);
+}
+
+.step:nth-child(3n + 1) .step-media {
+  background: linear-gradient(135deg, #ffd861, #ff9f43);
+}
+
+.step:nth-child(3n + 3) .step-media {
+  background: linear-gradient(135deg, #ff8a75, #f25a5a);
+}
+
+.step-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.step-num {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.7rem;
+  z-index: 1;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(8, 30, 22, 0.8);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+/* sin foto: el número de etapa ocupa la tarjeta */
+.step-media.no-img .step-num {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  background: none;
+  color: rgba(16, 37, 29, 0.55);
+  font-size: 5rem;
+}
+
+.step-body {
+  padding: 1rem 1.2rem 1.3rem;
+}
+
+.step-date {
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.step-body h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.step-desc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.timeline-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.tl-btn {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(8, 30, 22, 0.6);
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.tl-btn:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #10251d;
+}
+
+.tl-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.timeline-count {
+  min-width: 4.5rem;
+  text-align: center;
+  font-weight: 700;
+  color: #edf8ef;
+}
+
+@media (max-width: 720px) {
+  .view-switch button {
+    min-width: 7.5rem;
+    padding-inline: 0.8rem;
+  }
+
+  .sp {
+    grid-template-columns: 48px 1fr auto;
+  }
+
+  .sp-img {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .species-list.anim .sp-bar span {
+    animation: none;
+  }
+
+  .species-dialog,
+  .view-switch::before {
+    transition: none;
+  }
+}
+
+/* ===================== Optimización ===================== */
+/* con el panel abierto, lo de atrás se congela: la GPU solo dibuja el panel */
+body.panel-abierto {
+  overflow: hidden;
+}
+
+body.panel-abierto .balloon,
+body.panel-abierto .balloon::before,
+body.panel-abierto .balloon::after,
+body.panel-abierto .balloon-ring::before,
+body.panel-abierto .bird,
+body.panel-abierto .sky::before,
+body.panel-abierto .sky::after {
+  animation-play-state: paused;
+}
+
+/* hover solo con mouse */
+@media (hover: hover) and (pointer: fine) {
+  .balloon:hover {
+    scale: 1.07;
+    z-index: 3;
+  }
+
+  .balloon:hover::before {
+    opacity: 0.75;
+  }
+
+  .balloon:hover .balloon-image-wrap img {
+    scale: 1.2;
+  }
+
+  .balloon:hover .balloon-label {
+    background-color: var(--c1);
+    color: #10251d;
+    border-color: rgba(255, 255, 255, 0.7);
+    translate: -50% -6px;
+  }
+}
+
+/* ===================== Pestañas, listas y mapa ===================== */
+.species-tabs {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem 0;
+}
+
+.species-tabs button {
+  padding: 0.55rem 1.3rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: rgba(234, 247, 238, 0.7);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.species-tabs button.is-active {
+  color: #fff;
+  border-bottom-color: var(--c1);
+}
+
+.species-tabs button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -3px;
+}
+
+.species-pane {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.species-pane[hidden],
+.species-list[hidden],
+.map-msg[hidden],
+.map-aviso[hidden] {
+  display: none;
+}
+
+.species-lists {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c1) transparent;
+}
+
+.species-map {
+  flex: 1;
+  min-height: 0;
+  margin: 0.6rem 1.2rem 1.2rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0b2a20;
+}
+
+.map-msg {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  text-align: center;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.map-aviso {
+  position: absolute;
+  left: 1.9rem;
+  bottom: 1.9rem;
+  z-index: 2;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.6rem;
+  background: rgba(8, 30, 22, 0.92);
+  font-size: 0.85rem;
+}
+
+.map-pin span {
+  display: block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--c1);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 7px color-mix(in srgb, var(--c1) 35%, transparent), 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.leaflet-tooltip.map-tip {
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--c1);
+  border-radius: 0.6rem;
+  background: rgba(8, 30, 22, 0.92);
+  box-shadow: none;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.leaflet-tooltip-top.map-tip::before {
+  border-top-color: rgba(8, 30, 22, 0.92);
+}
+
+/* ===================== Responsive ===================== */
+/* pantallas grandes / proyector */
+@media (min-width: 1600px) {
+  .balloon {
+    width: 380px;
+    height: 380px;
+  }
+
+  .balloons {
+    min-height: 520px;
+  }
+
+  .timeline-view {
+    --stepw: 380px;
+  }
+
+  .step-media {
+    height: 210px;
+  }
+
+  .step-body h3 {
+    font-size: 1.35rem;
+  }
+
+  .step-desc {
+    font-size: 1.05rem;
+  }
+}
+
+/* tablet */
+@media (max-width: 1024px) {
+  .gallery {
+    padding-inline: 1rem;
+  }
+
+  .balloons {
+    gap: clamp(1rem, 3vw, 2rem);
+  }
+
+  .balloon-label {
+    padding: 0.55rem 1rem;
+  }
+
+  .balloon-label span {
+    font-size: 1rem;
+  }
+
+  .balloon-label small {
+    font-size: 0.78rem;
+  }
+}
+
+/* teléfono */
+@media (max-width: 720px) {
+  .gallery {
+    padding-inline: 1rem;
+    padding-bottom: 5rem;
+    justify-content: flex-start;
+  }
+
+  .gallery-header {
+    margin-bottom: 1.6rem;
+  }
+
+  .kicker {
+    font-size: 0.75rem;
+    letter-spacing: 0.15rem;
+  }
+
+  .balloons {
+    min-height: 0;
+  }
+
+  .presentation-content {
+    padding: 1.2rem;
+  }
+
+  .eyebrow {
+    letter-spacing: 0.15rem;
+  }
+
+  .timeline-view {
+    padding-top: 5rem;
+  }
+
+  .step-media {
+    height: 140px;
+  }
+
+  .species-panel {
+    padding: 0;
+    place-items: end center;
+  }
+
+  .species-dialog {
+    width: 100%;
+    height: 92vh;
+    height: 92dvh;
+    border-width: 2px 0 0;
+    border-radius: 1.4rem 1.4rem 0 0;
+  }
+
+  .species-head {
+    gap: 0.7rem;
+    padding: 0.9rem 1rem;
+  }
+
+  .species-head-img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .species-head h3 {
+    font-size: 1.35rem;
+  }
+
+  .species-close {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .species-tabs {
+    padding-inline: 0.6rem;
+  }
+
+  .species-tabs button {
+    flex: 1;
+    padding-inline: 0.5rem;
+  }
+
+  .species-note {
+    padding-inline: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .species-list {
+    padding-inline: 0.6rem;
+  }
+
+  .species-map {
+    margin: 0.5rem 0.6rem 0.8rem;
+  }
+
+  .map-aviso {
+    left: 1rem;
+    bottom: 1.2rem;
+  }
+}
+
+/* teléfono pequeño */
+@media (max-width: 400px) {
+  .view-switch button {
+    min-width: 6.4rem;
+    padding-inline: 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .sp {
+    gap: 0.6rem;
+  }
+
+  .sp-avg strong {
+    font-size: 1.4rem;
+  }
+}
+
+/* pantallas bajas (teléfono horizontal, ventanas chicas) */
+@media (max-height: 520px) {
+  .view-switch {
+    top: 8px;
+  }
+
+  .view-switch button {
+    padding-block: 0.4rem;
+  }
+
+  .gallery {
+    padding-top: 4.2rem;
+  }
+
+  .timeline-view {
+    padding-top: 4rem;
+  }
+
+  .step-media {
+    height: 110px;
+  }
+
+  .species-panel {
+    padding: 0.4rem;
+    place-items: center;
+  }
+
+  .species-dialog {
+    height: 96vh;
+    height: 96dvh;
+    border-width: 2px;
+    border-radius: 1.2rem;
+  }
+
+  .species-head {
+    padding-block: 0.5rem;
+  }
+
+  .species-head-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .species-head h3 {
+    font-size: 1.2rem;
   }
 }
