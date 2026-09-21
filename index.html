@@ -6,6 +6,32 @@
     <title>Avistamiento de aves en Espinar</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
+  <audio id="ambientAudio" autoplay loop playsinline muted hidden>
+    <source src="https://res.cloudinary.com/k2mr5gwl/video/upload/v1789955784/Aves.mp3" type="audio/mpeg" />
+  </audio>
+  <script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const audio = document.getElementById('ambientAudio');
+    if (!audio) return;
+
+    // Establece el inicio en el segundo 20
+    audio.currentTime = 45;
+
+    const tryPlay = () => {
+      audio.volume = 1;
+      audio.play().catch(() => {
+        audio.muted = false;
+      });
+    };
+
+    tryPlay();
+
+    document.addEventListener('pointerdown', () => {
+      audio.muted = false;
+      audio.play().catch(() => {});
+    }, { once: true });
+  });
+  </script>
   <body data-view="lagunas">
     <nav class="view-switch" aria-label="Cambiar de vista">
       <button type="button" class="is-active" data-view="lagunas" aria-pressed="true">Lagunas</button>
@@ -38,7 +64,7 @@
       <section class="balloons" aria-label="Lagunas y avistamientos de Espinar">
         <article class="balloon balloon-1" data-laguna="apanta">
           <span class="balloon-ring"></span>
-            <div class="balloon-image-wrap">
+          <div class="balloon-image-wrap">
             <img src="img/Apanta_parado.jpg" alt="Aves en la laguna de Apanta" />
           </div>
           <div class="balloon-label">
@@ -49,7 +75,7 @@
 
         <article class="balloon balloon-2" data-laguna="apacheta">
           <span class="balloon-ring"></span>
-            <div class="balloon-image-wrap">
+          <div class="balloon-image-wrap">
             <img src="img/Huayalla_Apacheta_parado.jpg" alt="Aves en Huayalla Apacheta" />
           </div>
           <div class="balloon-label">
@@ -60,7 +86,7 @@
 
         <article class="balloon balloon-3" data-laguna="qochapata">
           <span class="balloon-ring"></span>
-            <div class="balloon-image-wrap">
+          <div class="balloon-image-wrap">
             <img src="img/Qochapata_parado.jpg" alt="Aves en Qochapata" />
           </div>
           <div class="balloon-label">
@@ -69,6 +95,23 @@
           </div>
         </article>
       </section>
+
+      <div class="scene-birds" aria-hidden="true">
+        <div class="orbiting-bird orbit-apanta">
+          <img src="img/Fulica_gigantea.webp" alt="Gallareta" />
+          <div class="bird-info">
+            <span class="common-name">Gallareta</span>
+            <em class="sci-name">Fulica gigantea</em>
+          </div>
+        </div>
+        <div class="orbiting-bird orbit-apanta-extra">
+          <img src="img/Anas_puna.jpg" alt="Pato puneño" />
+          <div class="bird-info">
+            <span class="common-name">Pato puneño</span>
+            <em class="sci-name">Anas puna</em>
+          </div>
+        </div>
+      </div>
     </main>
 
     <section class="timeline-view" id="timelineView" aria-label="Línea de tiempo de la investigación">
@@ -84,8 +127,33 @@
           <p class="timeline-count" id="tlCount" aria-live="polite">1 / 7</p>
           <button type="button" class="tl-btn" id="tlNext" aria-label="Etapa siguiente">&#8250;</button>
         </div>
+        
+        <!-- Cajas de Evidencia (Unidades de Aprendizaje) -->
+        <div class="evidence-section">
+          <header class="gallery-header">
+            <p class="kicker">Documentos del proyecto</p>
+            <h3 class="evidence-title">Unidades de Aprendizaje</h3>
+          </header>
+          <div class="evidence-grid">
+            <a href="https://drive.google.com/file/d/1vZ-WLa-d8lHfWJefQxfoRmmhoQxwHhX8/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="evidence-card">
+              <span class="evidence-icon">📄</span>
+              <div class="evidence-info">
+                <h4>Unidad de Aprendizaje 1</h4>
+                <p>Ver documento en PDF</p>
+              </div>
+            </a>
+            <a href="https://drive.google.com/file/d/1oCD_l3Gb_PchIIjzOpz2zYj0KOtWpko1/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="evidence-card">
+              <span class="evidence-icon">📄</span>
+              <div class="evidence-info">
+                <h4>Unidad de Aprendizaje 2</h4>
+                <p>Ver documento en PDF</p>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
     </section>
+    </main>
 
     <div class="species-panel" id="speciesPanel" aria-hidden="true">
       <div class="species-backdrop" data-close></div>

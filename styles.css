@@ -746,7 +746,12 @@ body[data-view="timeline"] .gallery {
 .timeline-inner {
   position: relative;
   z-index: 1;
-  margin-block: auto;
+  width: min(100%, 1100px);
+  min-height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 2rem;
 }
 
 .timeline-view .gallery-header {
@@ -890,6 +895,7 @@ body[data-view="timeline"] .gallery {
   justify-content: center;
   align-items: center;
   gap: 1.2rem;
+  margin-top: 0.5rem;
 }
 
 .tl-btn {
@@ -994,6 +1000,8 @@ body.panel-abierto .sky::after {
   display: flex;
   gap: 0.4rem;
   padding: 0.6rem 1.2rem 0;
+  position: relative;
+  z-index: 2;
 }
 
 .species-tabs button {
@@ -1005,6 +1013,7 @@ body.panel-abierto .sky::after {
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+  pointer-events: auto;
   transition: color 0.25s ease, border-color 0.25s ease;
 }
 
@@ -1311,4 +1320,222 @@ body.panel-abierto .sky::after {
   .species-head h3 {
     font-size: 1.2rem;
   }
+}
+.scene-birds {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ===================== Aves flotando ===================== */
+.orbiting-bird {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  animation: birdFloat 12s ease-in-out infinite, birdAppear 12s ease-in-out infinite;
+}
+
+.orbit-apanta {
+  left: 12%;
+  top: 18%;
+  --drift-x: 52px;
+  --drift-y: -32px;
+  animation-delay: 0.2s, 0s;
+}
+
+.orbit-apanta-extra {
+  left: 88%;
+  top: 50%;
+  --drift-x: -46px;
+  --drift-y: 34px;
+  animation-delay: 2.5s, 1.2s;
+}
+
+.orbit-apacheta {
+  left: 56%;
+  top: 8%;
+  --drift-x: -34px;
+  --drift-y: -26px;
+  animation-delay: 0.8s, 0.4s;
+}
+
+.orbit-apacheta-extra {
+  left: 90%;
+  top: 70%;
+  --drift-x: 28px;
+  --drift-y: 22px;
+  animation-delay: 3.2s, 1.7s;
+}
+
+.orbit-qochapata {
+  left: 24%;
+  top: 78%;
+  --drift-x: 22px;
+  --drift-y: -38px;
+  animation-delay: 1.2s, 0.8s;
+}
+
+.orbit-qochapata-extra {
+  left: 72%;
+  top: 84%;
+  --drift-x: -26px;
+  --drift-y: 32px;
+  animation-delay: 2.1s, 1.4s;
+}
+
+.orbiting-bird img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  animation: birdBob 2.8s ease-in-out infinite alternate;
+}
+
+.bird-info {
+  position: absolute;
+  bottom: -42px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(11, 48, 36, 0.95);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 12px;
+  text-align: center;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.bird-info .common-name {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.bird-info .sci-name {
+  display: block;
+  font-size: 0.7rem;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+@keyframes birdFloat {
+  0%, 100% {
+    transform: translate(-50%, -50%) translate(0, 0);
+  }
+  25% {
+    transform: translate(-50%, -50%) translate(var(--drift-x), -18px);
+  }
+  50% {
+    transform: translate(-50%, -50%) translate(calc(var(--drift-x) * -0.7), 14px);
+  }
+  75% {
+    transform: translate(-50%, -50%) translate(var(--drift-x), calc(var(--drift-y) * 0.8));
+  }
+}
+
+@keyframes birdAppear {
+  0%, 10%, 90%, 100% {
+    opacity: 0;
+    scale: 0.72;
+  }
+  20%, 35%, 55%, 70% {
+    opacity: 1;
+    scale: 1;
+  }
+  45%, 60% {
+    opacity: 0.4;
+    scale: 0.9;
+  }
+}
+
+@keyframes birdBob {
+  0% {
+    transform: rotate(-4deg) scale(1);
+  }
+  100% {
+    transform: rotate(4deg) scale(1.04);
+  }
+}
+
+@media (max-width: 720px) {
+  .orbiting-bird {
+    width: 58px;
+    height: 58px;
+  }
+  .bird-info {
+    bottom: -35px;
+  }
+  .bird-info .common-name { font-size: 0.7rem; }
+  .bird-info .sci-name { font-size: 0.6rem; }
+}
+
+/* ===================== Cajas de Evidencia (PDFs) ===================== */
+.evidence-section {
+  width: 100%;
+  max-width: 800px;
+  margin: auto auto 0;
+  padding: 0 1.5rem;
+}
+
+.evidence-title {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  color: #edf8ef;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.evidence-card {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 1.2rem 1.5rem;
+  border-radius: 1.2rem;
+  text-decoration: none;
+  color: #f4faf5;
+  backdrop-filter: blur(8px);
+  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.evidence-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-5px);
+  border-color: var(--accent);
+}
+
+.evidence-icon {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.evidence-info h4 {
+  font-size: 1.05rem;
+  margin-bottom: 0.2rem;
+  color: var(--accent);
+}
+
+.evidence-info p {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin: 0;
 }

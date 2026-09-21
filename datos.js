@@ -30,12 +30,19 @@ const ESPECIES = {
 };
 
 /* Lagunas: coords = punto del mapa (Leaflet); registros = { especie: [conteo 2025, conteo 2026] } (de Aves.md) */
+/* Lagunas con videos y datos para Pop-ups de avistamientos interesantes */
 const LAGUNAS = {
   apanta: {
     nombre: 'Laguna de Apanta',
-    coords: [-14.560944, -71.588806],   // TU COORDENADA: [latitud, longitud], ej. [-14.123456, -71.123456]
-    zoom: 15,       // acercamiento inicial del mapa (1 lejos ... 19 cerca)
+    coords: [-14.560944, -71.575472],
+    zoom: 15,
     foto: 'img/Apanta_parado.jpg',
+    video: 'https://res.cloudinary.com/k2mr5gwl/video/upload/v1789955791/Apanta2026.mp4',
+    avistamiento_popup: {
+      titulo: '¡¡¡Avistamiento Interesante!!!',
+      texto: 'Destacan las "Gallaretas peleadoras" (Gallareta gigante). Es todo un espectáculo observar su intenso comportamiento territorial en esta laguna.',
+      imagen: 'img/Fulica_gigantea.webp'
+    },
     registros: {
       fulica: [8, 15], chloephaga: [18, 5], lessonia: [34, 0], orochelidon: [32, 4],
       plegadis: [0, 5], colaptes: [8, 10], anas: [8, 0], vanellus: [2, 4],
@@ -46,9 +53,10 @@ const LAGUNAS = {
   },
   apacheta: {
     nombre: 'Laguna de Huaylla Apacheta',
-    coords: [-14.589917, -71.706167],   // TU COORDENADA: [latitud, longitud], ej. [-14.123456, -71.123456]
-    zoom: 15,       // acercamiento inicial del mapa (1 lejos ... 19 cerca)
+    coords: [-14.589917, -71.706167],
+    zoom: 15,
     foto: 'img/Huayalla_Apacheta_parado.jpg',
+    video: 'https://res.cloudinary.com/k2mr5gwl/video/upload/v1789955786/si.mp4',
     registros: {
       fulica: [15, 9], chloephaga: [2, 2], lessonia: [4, 0], orochelidon: [1, 0],
       plegadis: [2, 0], colaptes: [4, 1], anas: [6, 3], falco: [0, 5],
@@ -57,9 +65,20 @@ const LAGUNAS = {
   },
   qochapata: {
     nombre: 'Laguna de Qochapata',
-    coords: [-14.758972, -71.447306],   // TU COORDENADA: [latitud, longitud], ej. [-14.123456, -71.123456]
-    zoom: 15,       // acercamiento inicial del mapa (1 lejos ... 19 cerca)
+    coords: [-14.758972, -71.447306],
+    zoom: 15,
     foto: 'img/Qochapata_parado.jpg',
+    video: '', // Vacío por ahora
+    avistamiento_popup: {
+      titulo: '¡Avistamiento Extraordinario! ',
+      texto: 'Registro de Búho americano. Llama mucho la atención la rareza de encontrar a esta imponente ave rapaz nocturna por esta zona.',
+      imagen: 'img/Buho_virginianus.jpg'
+    },
+    avistamiento_popup: {
+      titulo: '¡Rareza en Espinar! ',
+      texto: 'Avistamiento de Zambullidor pimpollo. Destaca la gran rareza de encontrar a esta especie habitando en los ecosistemas de Espinar.',
+      imagen: 'img/Rollandia_rolland.jpg'
+    },
     registros: {
       fulica: [5, 32], chloephaga: [1, 0], lessonia: [6, 22], orochelidon: [0, 3],
       bubo: [0, 1], plegadis: [10, 7], colaptes: [15, 5], anas: [12, 2],
@@ -69,7 +88,6 @@ const LAGUNAS = {
     }
   }
 };
-
 /* Línea de tiempo. "imagen": pon la foto en img/linea/ con ese nombre
    (si el archivo no existe, la tarjeta muestra solo el número de etapa). */
 const ETAPAS = [
