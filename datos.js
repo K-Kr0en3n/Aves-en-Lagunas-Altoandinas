@@ -113,3 +113,31 @@ const ETAPAS = [
     texto: 'Análisis Shannon-Wiener (H = 2.61) y redacción del informe final.',
     imagen: 'img/linea/07_gabinete.jpg' }
 ];
+
+/* =====================================================
+   ME GUSTA COMPARTIDOS  (contador guardado en Firebase)
+   =====================================================
+   Sin databaseURL, los likes se guardan solo en ESTE dispositivo (ya no se
+   reinician al recargar) y se envían solos cuando pegues la URL.
+
+   Cómo enlazarlo (5 min, plan gratuito):
+   1. console.firebase.google.com → Agregar proyecto (Analytics no hace falta).
+   2. Compilación → Realtime Database → Crear base de datos → modo bloqueado.
+   3. Pestaña "Datos": crea el nodo  likes  con el hijo  total  = 0
+   4. Pestaña "Reglas": pega esto y pulsa Publicar:
+        {
+          "rules": {
+            ".read": false, ".write": false,
+            "likes": { "total": {
+              ".read": true,
+              ".write": "newData.isNumber() && (!data.exists() || newData.val() >= data.val()) && newData.val() - (data.exists() ? data.val() : 0) <= 200"
+            } }
+          }
+        }
+      (el total no puede bajar ni borrarse; cada envío suma como máximo 200)
+   5. Copia la URL de la base (arriba de "Datos") y pégala en databaseURL. */
+const LIKES_CONFIG = {
+  databaseURL: 'https://contador-aves-eureka-default-rtdb.firebaseio.com',
+  ruta: 'likes/total',
+  sdk: '12.19.0'                   // versión del SDK de Firebase (CDN de Google)
+};

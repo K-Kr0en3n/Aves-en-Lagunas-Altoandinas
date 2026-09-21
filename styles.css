@@ -1539,3 +1539,212 @@ body.panel-abierto .sky::after {
   opacity: 0.8;
   margin: 0;
 }
+
+/* =====================================================================
+   ===================== AJUSTES MÓVIL / TÁCTIL ========================
+   ===================================================================== */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* sin retardo ni zoom por doble toque en botones y globos */
+button,
+.balloon {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Botón de música de fondo ---------- */
+.music-btn {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background: rgba(8, 30, 22, 0.9);
+  color: #f5fff7;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(3, 20, 15, 0.3);
+  transition: border-color 0.25s ease, transform 0.15s ease;
+}
+
+.music-btn:hover {
+  border-color: var(--accent);
+}
+
+.music-btn:active {
+  transform: scale(0.92);
+}
+
+.music-btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+/* sonido esperando el primer toque: el botón late para llamar la atención */
+.music-btn.is-blocked {
+  border-color: var(--accent);
+  animation: music-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes music-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(249, 200, 93, 0.55); }
+  50% { box-shadow: 0 0 0 9px rgba(249, 200, 93, 0); }
+}
+
+/* ---------- Pestaña de video (antes con estilos en línea) ---------- */
+.vid-wrap {
+  flex: 1;
+  min-height: 0;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.vid-title {
+  margin-bottom: 1.5rem;
+  color: var(--accent);
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+}
+
+.vid-media {
+  width: 100%;
+  max-width: 650px;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: #000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.vid-media video {
+  display: block;
+  width: 100%;
+  max-height: 50vh;
+  max-height: 50dvh;
+}
+
+/* ---------- Teléfono ---------- */
+@media (max-width: 720px) {
+  .music-btn {
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.05rem;
+  }
+
+  /* objetivos táctiles de 44 px */
+  .species-close {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .species-tabs button {
+    min-height: 44px;
+  }
+
+  .tl-btn {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+
+  /* la barra de likes va fija abajo: deja espacio para que no tape el final de cada vista */
+  .gallery {
+    padding-bottom: 6rem;
+  }
+
+  .timeline-inner {
+    padding-bottom: 6rem;
+  }
+
+  .vid-wrap {
+    padding: 1rem 0.8rem 1.4rem;
+  }
+
+  .vid-title {
+    margin-bottom: 0.9rem;
+  }
+
+  /* tarjetas de documentos: una por fila, más compactas */
+  .evidence-section {
+    padding-inline: 1rem;
+  }
+
+  .evidence-grid {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    margin-top: 1.2rem;
+  }
+
+  .evidence-card {
+    padding: 1rem 1.1rem;
+    gap: 0.9rem;
+  }
+
+  .evidence-icon {
+    font-size: 2rem;
+  }
+}
+
+/* teléfonos muy angostos (320–360 px) */
+@media (max-width: 360px) {
+  .gallery-header h2 {
+    font-size: 1.9rem;
+    letter-spacing: 0.03em;
+  }
+
+  .balloon-label {
+    padding: 0.5rem 0.9rem;
+  }
+
+  .balloon-label span {
+    font-size: 0.95rem;
+  }
+
+  .step-body {
+    padding: 0.9rem 1rem 1.1rem;
+  }
+}
+
+/* teléfono horizontal / ventanas bajas */
+@media (max-height: 520px) {
+  .music-btn {
+    top: 8px;
+    right: 8px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .vid-title {
+    display: none;
+  }
+
+  .vid-wrap {
+    padding-block: 0.6rem;
+  }
+
+  .vid-media video {
+    max-height: 70vh;
+    max-height: 70dvh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-btn.is-blocked {
+    animation: none;
+  }
+}

@@ -5,34 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Avistamiento de aves en Espinar</title>
     <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
   </head>
-  <audio id="ambientAudio" autoplay loop playsinline muted hidden>
-    <source src="https://res.cloudinary.com/k2mr5gwl/video/upload/v1789955784/Aves.mp3" type="audio/mpeg" />
-  </audio>
-  <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    const audio = document.getElementById('ambientAudio');
-    if (!audio) return;
-
-    // Establece el inicio en el segundo 20
-    audio.currentTime = 45;
-
-    const tryPlay = () => {
-      audio.volume = 1;
-      audio.play().catch(() => {
-        audio.muted = false;
-      });
-    };
-
-    tryPlay();
-
-    document.addEventListener('pointerdown', () => {
-      audio.muted = false;
-      audio.play().catch(() => {});
-    }, { once: true });
-  });
-  </script>
   <body data-view="lagunas">
+    <!-- Música de fondo: la controla Fondo en script.js (arranque, reintentos, pausa durante los videos) -->
+    <audio id="ambientAudio" src="https://res.cloudinary.com/k2mr5gwl/video/upload/v1789955784/Aves.mp3" preload="auto" loop playsinline hidden></audio>
+    <button type="button" class="music-btn" id="musicBtn" aria-label="Música de fondo" aria-pressed="true" title="Música de fondo">🔊</button>
+
     <nav class="view-switch" aria-label="Cambiar de vista">
       <button type="button" class="is-active" data-view="lagunas" aria-pressed="true">Lagunas</button>
       <button type="button" data-view="timeline" aria-pressed="false">Línea de tiempo</button>
@@ -153,7 +132,6 @@
         </div>
       </div>
     </section>
-    </main>
 
     <div class="species-panel" id="speciesPanel" aria-hidden="true">
       <div class="species-backdrop" data-close></div>
