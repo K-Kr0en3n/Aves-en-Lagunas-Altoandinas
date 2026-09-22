@@ -130,16 +130,11 @@ body {
 
 /* ---------- Cielo y laguna (capa decorativa detrás de los globos) ---------- */
 .sky {
-  /* anclada al fondo del contenedor para comportarse como footer decorativo */
   position: absolute;
-  left: 0;
-  right: 0;
-  top: auto;
-  bottom: 0;
+  inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  /* altura controlada por las pseudo-elementos; el contenedor reserva espacio con padding-bottom */
 }
 
 /* dos olas que se deslizan a distinta velocidad */
@@ -417,11 +412,6 @@ body {
 .timeline-inner {
   position: relative;
   z-index: 2; /* elevar contenido sobre las olas */
-}
-
-/* Asegurar que el contenedor .sky no ocupe todo el alto y deje ver contenido */
-.sky {
-  height: var(--wave-footer-height);
 }
 
 @keyframes waves {
@@ -1889,4 +1879,11 @@ button,
   .music-btn.is-blocked {
     animation: none;
   }
+}
+/* Fija las olas como fondo estático SOLO en la línea de tiempo */
+.timeline-view .sky {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }

@@ -5,6 +5,20 @@ const miniatura = (foto) => 'img/thumbs/' + foto.split('/').pop().replace(/\.[^.
 
 let globoPendiente = null;
 
+/* Reemplaza apariciones de nombres científicos por su versión en <em>cursiva</em> */
+function italicizeScientificNames(text) {
+  if (!text) return text;
+  let out = text;
+  Object.values(ESPECIES).forEach((s) => {
+    const name = s && s.cientifico;
+    if (!name) return;
+    const esc = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp('\\b' + esc + '\\b', 'g');
+    out = out.replace(re, `<em>${name}</em>`);
+  });
+  return out;
+}
+
 /* ===== Almacenamiento local (con try/catch: en modo privado puede lanzar error) ===== */
 const LS = {
   leer(clave, defecto) {
@@ -310,6 +324,16 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
   document.body.insertAdjacentHTML('beforeend', htmlPopup);
 
+  // Listener del botón del popup: cierra el overlay y abre el panel principal
+  const avistBtnEl = $('avistBtn');
+  if (avistBtnEl) {
+    avistBtnEl.addEventListener('click', () => {
+      $('avistOverlay').classList.remove('is-active');
+      if (globoPendiente) {
+        setTimeout(() => { abrirPanel(globoPendiente); globoPendiente = null; }, 300);
+      }
+    });
+  }
   // 2. Inyectar Pestaña de Video en el Panel
   const tabsContainer = document.querySelector('.species-tabs');
   const dialogContainer = document.querySelector('.species-dialog');
@@ -741,8 +765,8 @@ function procesarClickGlobo(globo) {
     globoPendiente = globo; 
     
     // Llenar Pop-up con nombre y foto
-    $('avistTitle').textContent = laguna.avistamiento_popup.titulo;
-    $('avistText').textContent = laguna.avistamiento_popup.texto;
+    $('avistTitle').innerHTML = italicizeScientificNames(laguna.avistamiento_popup.titulo);
+    $('avistText').innerHTML = italicizeScientificNames(laguna.avistamiento_popup.texto);
     
     if (laguna.avistamiento_popup.imagen) {
       $('avistImg').src = laguna.avistamiento_popup.imagen;

@@ -47,7 +47,7 @@ const LAGUNAS = {
       fulica: [8, 15], chloephaga: [18, 5], lessonia: [34, 0], orochelidon: [32, 4],
       plegadis: [0, 5], colaptes: [8, 10], anas: [8, 0], vanellus: [2, 4],
       phoenicopterus: [3, 3], zonotrichia: [15, 6], phalcoboenus: [6, 5],
-      conirostrum: [34, 0], circus: [1, 0], falco: [1, 2], oxyura: [3, 0],
+      conirostrum: [0, 33], circus: [1, 0], falco: [1, 2], oxyura: [3, 0],
       chroicocephalus: [7, 0]
     }
   },
@@ -57,11 +57,17 @@ const LAGUNAS = {
     zoom: 15,
     foto: 'img/Huayalla_Apacheta_parado.jpg',
     video: 'https://res.cloudinary.com/k2mr5gwl/video/upload/v1789955786/si.mp4',
+    avistamiento_popup: {
+      titulo: '¡Rareza en Espinar! ',
+      texto: 'Avistamiento de Rollandia Rolland. Destaca la gran rareza de encontrar a esta especie habitando en los ecosistemas de Espinar.',
+      imagen: 'img/Rollandia_rolland.jpg'
+    },
     registros: {
       fulica: [15, 9], chloephaga: [2, 2], lessonia: [4, 0], orochelidon: [1, 0],
       plegadis: [2, 0], colaptes: [4, 1], anas: [6, 3], falco: [0, 5],
-      metriopelia: [0, 1], nothoprocta: [0, 1], columba: [0, 3]
+      metriopelia: [0, 1], nothoprocta: [0, 1],  rollandia: [0, 1], columba: [0, 3]
     }
+
   },
   qochapata: {
     nombre: 'Laguna de Qochapata',
@@ -71,20 +77,16 @@ const LAGUNAS = {
     video: '', // Vacío por ahora
     avistamiento_popup: {
       titulo: '¡Avistamiento Extraordinario! ',
-      texto: 'Registro de Búho americano. Llama mucho la atención la rareza de encontrar a esta imponente ave rapaz nocturna por esta zona.',
+      texto: 'Registro de Búho virginianus. Llama mucho la atención la rareza de encontrar a esta imponente ave rapaz nocturna por esta zona.',
       imagen: 'img/Buho_virginianus.jpg'
     },
-    avistamiento_popup: {
-      titulo: '¡Rareza en Espinar! ',
-      texto: 'Avistamiento de Zambullidor pimpollo. Destaca la gran rareza de encontrar a esta especie habitando en los ecosistemas de Espinar.',
-      imagen: 'img/Rollandia_rolland.jpg'
-    },
+
     registros: {
-      fulica: [5, 32], chloephaga: [1, 0], lessonia: [6, 22], orochelidon: [0, 3],
-      bubo: [0, 1], plegadis: [10, 7], colaptes: [15, 5], anas: [12, 2],
+      fulica: [5, 32], chloephaga: [1, 22], lessonia: [6, 22], orochelidon: [0, 3],
+      bubo: [0, 1], plegadis: [7, 10], colaptes: [15, 5], anas: [12, 6],
       vanellus: [10, 2], phoenicopterus: [42, 31], zonotrichia: [7, 7], ardea: [6, 0],
-      phalcoboenus: [0, 4], falco: [0, 1], chroicocephalus: [0, 15], rollandia: [0, 1],
-      columba: [0, 3]
+      phalcoboenus: [0, 4], falco: [0, 1], chroicocephalus: [0, 15],
+      columba: [3, 0]
     }
   }
 };
@@ -111,7 +113,7 @@ const ETAPAS = [
     imagen: 'img/Apoyo.jpg' },
   { fecha: '1 – 9 Ago 2026',          titulo: 'Etapa 4 · Gabinete',
     texto: 'Análisis Shannon-Wiener (H = 2.61) y redacción del informe final.',
-    imagen: 'img/linea/07_gabinete.jpg' }
+    imagen: 'https://res.cloudinary.com/k2mr5gwl/image/upload/v1790076840/Gemini_Generated_Image_qe4z6pqe4z6pqe4z.jpg' }
 ];
 
 /* =====================================================
