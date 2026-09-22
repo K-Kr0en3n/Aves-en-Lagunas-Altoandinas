@@ -40,7 +40,7 @@ const LAGUNAS = {
     video: 'https://res.cloudinary.com/k2mr5gwl/video/upload/v1789955791/Apanta2026.mp4',
     avistamiento_popup: {
       titulo: '¡¡¡Avistamiento Interesante!!!',
-      texto: 'Destacan las "Gallaretas peleadoras" (Gallareta gigante). Es todo un espectáculo observar su intenso comportamiento territorial en esta laguna.',
+      texto: 'Destacan las "Gallaretas peleadoras" (Fulica gigantea). Es todo un espectáculo observar su intenso comportamiento territorial en esta laguna.',
       imagen: 'img/Fulica_gigantea.webp'
     },
     registros: {

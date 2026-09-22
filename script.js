@@ -337,7 +337,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /*
   // 3. INYECCIÓN DEL SISTEMA DE "ME GUSTA" (MARGEN IZQUIERDO)
+  // Comentado porque el almacenamiento no funciona en el servidor actual.
   const estilosMeGusta = document.createElement('style');
   estilosMeGusta.innerHTML = `
     .like-sidebar { position: fixed; left: 16px; top: 50%; transform: translateY(-50%); z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 8px; font-family: sans-serif; background: rgba(8, 30, 22, 0.9); border: 1px solid rgba(249, 200, 93, 0.25); border-radius: 50px; padding: 14px 10px; box-shadow: 0 12px 32px rgba(0,0,0,0.4); backdrop-filter: blur(8px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -350,11 +352,9 @@ document.addEventListener('DOMContentLoaded', () => {
     .like-count.bump { transform: scale(1.3) rotate(5deg); color: #ff6b81; }
     .like-label { font-size: 9px; text-transform: uppercase; font-weight: 700; opacity: 0.7; letter-spacing: 0.05em; color: #eaf7ee; }
     
-    /* Pequeños globos / combos */
     .combo-badge { position: absolute; left: 64px; top: 12px; background: #ffd861; color: #10251d; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 800; opacity: 0; pointer-events: none; transform: translateX(-10px) scale(0.8); transition: all 0.25s ease; box-shadow: 0 4px 8px rgba(0,0,0,0.2); white-space: nowrap; }
     .combo-badge.active { opacity: 1; transform: translateX(0) scale(1); }
 
-    /* Partículas de corazones flotantes */
     .flying-heart { position: fixed; pointer-events: none; z-index: 10000; font-size: var(--size); color: var(--color); transform: translate(-50%, -50%) rotate(var(--rot)); animation: flyAway var(--time) cubic-bezier(0.1, 0.8, 0.3, 1) forwards; }
 
     @keyframes heartbeat {
@@ -374,7 +374,6 @@ document.addEventListener('DOMContentLoaded', () => {
       100% { opacity: 0; transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(0.5) rotate(calc(var(--rot) * 1.5)); }
     }
 
-    /* Móvil: barra horizontal centrada abajo (no tapa las fotos ni los globos) */
     @media (max-width: 720px) {
       .like-sidebar { left: 50%; top: auto; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); flex-direction: row; gap: 10px; padding: 7px 18px 7px 7px; border-radius: 999px; }
       .like-btn { width: 44px; height: 44px; font-size: 22px; }
@@ -383,7 +382,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .combo-badge { left: 50%; top: auto; bottom: calc(100% + 10px); transform: translate(-50%, 6px) scale(0.8); }
       .combo-badge.active { transform: translate(-50%, 0) scale(1); }
     }
-    /* Teléfono horizontal (poca altura): botón más compacto, sigue a la izquierda */
     @media (max-height: 520px) and (min-width: 721px) {
       .like-sidebar { left: 8px; padding: 8px 6px; gap: 4px; }
       .like-btn { width: 40px; height: 40px; font-size: 20px; }
@@ -405,12 +403,10 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
   document.body.insertAdjacentHTML('beforeend', htmlMeGusta);
 
-  /* LÓGICA DEL SISTEMA DE ME GUSTA */
   const likeBtn = $('likeBtn');
   const likeCountEl = $('likeCount');
   const comboBadge = $('comboBadge');
 
-  // El contador vive en el almacén (Firebase + copia local): ya no se reinicia al recargar
   const likes = crearAlmacenLikes((n) => { likeCountEl.textContent = n.toLocaleString('es-PE'); });
   likes.iniciar();
 
@@ -418,7 +414,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let comboTimeout = null;
 
   const runLikeAnimation = (x, y) => {
-    // Generar 12-15 corazoncitos y destellos que explotan
     const particleCount = Math.floor(Math.random() * 6) + 12;
     const colors = ['#ff4757', '#ff6b81', '#ff4757', '#ffd226', '#f3a683', '#ff9f43', '#ffffff'];
     const icons = ['❤️', '💖', '✨', '💕', '🧡', '⭐️', '💝', '🫶'];
@@ -427,22 +422,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const p = document.createElement('div');
       p.className = 'flying-heart';
       p.textContent = icons[Math.floor(Math.random() * icons.length)];
-      
-      // Estilos CSS aleatorios utilizando custom variables inline
       p.style.setProperty('--size', `${Math.floor(Math.random() * 14) + 12}px`);
       p.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
       p.style.setProperty('--rot', `${Math.floor(Math.random() * 90) - 45}deg`);
       p.style.setProperty('--time', `${0.6 + Math.random() * 0.9}s`);
-      
-      // Expulsión de partículas hacia la derecha, arriba y abajo
-      const angle = (Math.random() * Math.PI * 2); // 360 grados
+      const angle = (Math.random() * Math.PI * 2);
       const distance = 40 + Math.random() * 120;
       const tx = Math.cos(angle) * distance;
-      const ty = Math.sin(angle) * distance - (30 + Math.random() * 60); // Sesgar más hacia arriba
+      const ty = Math.sin(angle) * distance - (30 + Math.random() * 60);
 
       p.style.setProperty('--tx', `${tx}px`);
       p.style.setProperty('--ty', `${ty}px`);
-      
       p.style.left = `${x}px`;
       p.style.top = `${y}px`;
 
@@ -453,42 +443,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   likeBtn.addEventListener('click', (e) => {
     likes.sumar(1);
-
-    // Sumarle animación visual al contador
     likeCountEl.classList.add('bump');
     setTimeout(() => likeCountEl.classList.remove('bump'), 200);
-
-    // Animación explosión del botón
     likeBtn.classList.add('bursting');
     setTimeout(() => likeBtn.classList.remove('bursting'), 400);
-
-    // Detectar posición de clic para disparar los corazones voladores
     const rect = likeBtn.getBoundingClientRect();
     const clickX = e.clientX || rect.left + rect.width / 2;
     const clickY = e.clientY || rect.top + rect.height / 2;
     runLikeAnimation(clickX, clickY);
-
-    // Sistema de COMBOS divertido
     clickCombo++;
     clearTimeout(comboTimeout);
-    
     let comboMsg = "¡Gracias! 🙌";
     if (clickCombo > 30) comboMsg = "¡¿Qué pasión?! 🔥🤯";
     else if (clickCombo > 20) comboMsg = "¡Insuperable! ✨🏆";
     else if (clickCombo > 15) comboMsg = "¡Qué locura! ❤️🔥";
     else if (clickCombo > 10) comboMsg = "¡Mucho amor! 😍";
     else if (clickCombo > 5) comboMsg = "¡Esoooo! 🚀";
-
     comboBadge.textContent = comboMsg;
     comboBadge.classList.add('active');
-
     comboTimeout = setTimeout(() => {
       clickCombo = 0;
       comboBadge.classList.remove('active');
     }, 1800);
   });
 
-  // Lógica del botón de continuar del Pop-up
   $('avistBtn').addEventListener('click', () => {$('avistOverlay').classList.remove('is-active');
     if (globoPendiente) {
       setTimeout(() => {
@@ -497,6 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 300);
     }
   });
+  */
 });
 
 /* ===== Presentación Inicial ===== */

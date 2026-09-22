@@ -130,11 +130,16 @@ body {
 
 /* ---------- Cielo y laguna (capa decorativa detrás de los globos) ---------- */
 .sky {
+  /* anclada al fondo del contenedor para comportarse como footer decorativo */
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  top: auto;
+  bottom: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  /* altura controlada por las pseudo-elementos; el contenedor reserva espacio con padding-bottom */
 }
 
 /* dos olas que se deslizan a distinta velocidad */
@@ -396,6 +401,27 @@ body {
   to {
     transform: rotate(6deg);
   }
+}
+
+/* Footer waves: reservar espacio y asegurar que las olas queden siempre abajo */
+:root {
+  --wave-footer-height: 140px; /* altura visual de las olas (ajustable) */
+}
+
+.gallery,
+.timeline-view {
+  position: relative;
+  padding-bottom: calc(var(--wave-footer-height) + 2rem);
+}
+
+.timeline-inner {
+  position: relative;
+  z-index: 2; /* elevar contenido sobre las olas */
+}
+
+/* Asegurar que el contenedor .sky no ocupe todo el alto y deje ver contenido */
+.sky {
+  height: var(--wave-footer-height);
 }
 
 @keyframes waves {
@@ -720,8 +746,8 @@ body[data-view="timeline"] .view-switch::before {
 
 /* ---------- Línea de tiempo ---------- */
 .timeline-view {
-  --stepw: min(320px, 78vw);
-  --gap: 1.4rem;
+  --stepw: min(300px, 76vw);
+  --gap: 1rem;
   display: none;
   position: fixed;
   inset: 0;
@@ -729,7 +755,7 @@ body[data-view="timeline"] .view-switch::before {
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 5.5rem 0 2rem;
+  padding: 4.8rem 0 1.5rem;
   background: linear-gradient(180deg, rgba(19, 52, 39, 0.56), rgba(15, 63, 47, 0.68)), url("img/fondo.jpg");
   background-size: cover;
   background-position: center;
@@ -751,11 +777,14 @@ body[data-view="timeline"] .gallery {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  padding-bottom: 2rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 0 2.5rem;
 }
 
 .timeline-view .gallery-header {
-  margin-bottom: 1.6rem;
+  margin: 0;
+  width: 100%;
 }
 
 .timeline-track {
@@ -765,16 +794,25 @@ body[data-view="timeline"] .gallery {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-padding-left: 2rem;
-  padding: 0.2rem calc(100vw - var(--stepw) - 2rem) 1.2rem 2rem;
+  width: 100%;
+  padding: 0.2rem 1rem 1.5rem 2rem;
+  margin: 0;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+  
+  /* NUEVO: Esto evita que el contenedor se aplaste verticalmente */
+  flex-shrink: 0;
+  min-height: max-content;
 }
 
 .step {
   position: relative;
   flex: 0 0 var(--stepw);
-  padding-top: 2.2rem;
+  padding-top: 1.8rem;
   scroll-snap-align: start;
+  /* NUEVO: Convertimos el contenedor en flex para que respete las alturas */
+  display: flex;
+  flex-direction: column;
 }
 
 /* línea que une las etapas y punto de cada una */
@@ -806,7 +844,9 @@ body[data-view="timeline"] .gallery {
 }
 
 .step-card {
-  height: 100%;
+  /* CAMBIO CLAVE: Reemplazamos height: 100% por flex: 1 */
+  flex: 1;
+  min-height: 360px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -817,9 +857,17 @@ body[data-view="timeline"] .gallery {
   box-shadow: 0 16px 30px rgba(3, 20, 15, 0.25);
 }
 
+.step-body {
+  padding: 0.85rem 1rem 1rem;
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
 .step-media {
   position: relative;
-  height: 170px;
+  height: 150px;
   flex: none;
   background: linear-gradient(135deg, #4ad7d0, #1ca7b8);
 }
@@ -868,24 +916,24 @@ body[data-view="timeline"] .gallery {
 }
 
 .step-body {
-  padding: 1rem 1.2rem 1.3rem;
+  padding: 0.85rem 1rem 1rem;
 }
 
 .step-date {
-  margin-bottom: 0.25rem;
-  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--accent);
 }
 
 .step-body h3 {
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+  font-size: 1.08rem;
   line-height: 1.2;
 }
 
 .step-desc {
-  font-size: 0.95rem;
+  font-size: 0.86rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.88);
 }
@@ -895,7 +943,7 @@ body[data-view="timeline"] .gallery {
   justify-content: center;
   align-items: center;
   gap: 1.2rem;
-  margin-top: 0.5rem;
+  margin: 0.1rem 0 0.25rem;
 }
 
 .tl-btn {
@@ -1481,25 +1529,101 @@ body.panel-abierto .sky::after {
 
 /* ===================== Cajas de Evidencia (PDFs) ===================== */
 .evidence-section {
-  width: 100%;
-  max-width: 800px;
-  margin: auto auto 0;
-  padding: 0 1.5rem;
+  width: min(100%, 920px);
+  margin: 0 auto;
+  padding: 0 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .evidence-title {
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
   color: #edf8ef;
   font-weight: 800;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.evidence-header {
+  margin-bottom: 0.75rem;
+}
+
+.research-team {
+  margin-top: 0.25rem;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.credit-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
+  padding: 0.9rem 0.95rem;
+  min-height: 120px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 12px 26px rgba(6, 22, 17, 0.18);
+}
+
+.credit-card--full {
+  grid-column: 1 / -1;
+  min-height: auto;
+  margin-top: 0.2rem;
+}
+
+.credit-label {
+  margin-bottom: 0.5rem;
+  font-size: 0.68rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.credit-name {
+  font-size: 0.97rem;
+  font-weight: 800;
+  line-height: 1.35;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.credit-detail,
+.credit-list {
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: rgba(234, 247, 238, 0.9);
+}
+
+.credit-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.18rem;
+}
+
+.credit-list li {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.evidence-block {
+  margin-top: 0;
 }
 
 .evidence-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .evidence-card {
@@ -1684,10 +1808,28 @@ button,
     padding-inline: 1rem;
   }
 
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .credit-card {
+    padding: 0.8rem 0.85rem;
+    min-height: auto;
+  }
+
+  .credit-name {
+    font-size: 0.95rem;
+  }
+
+  .credit-detail,
+  .credit-list {
+    font-size: 0.76rem;
+  }
+
   .evidence-grid {
     grid-template-columns: 1fr;
     gap: 0.9rem;
-    margin-top: 1.2rem;
+    margin-top: 1rem;
   }
 
   .evidence-card {
